@@ -19,19 +19,17 @@ export class App extends React.Component {
   handleFormSubmit = async (query) => {
     page = 1;
     if (query.trim() === "") {
-      toast.warn("Enter a search term!!!");
-      alert("Enter a search term!!!");
-      return;
+      return toast.warn("Enter a search term!!!");
     } else {
       try {
         this.setState({ status: "pending" });
         const { totalHits, hits } = await searchFunc(query, page);
         if (hits.length < 1) {
           this.setState({ status: "idle" });
-          toast.warn(
-            "There are no images matching your request. Please try again."
-          );
-          alert("There are no images matching your request. Please try again.");
+          // return toast.warn(
+          //   "There are no images matching your request. Please try again."
+          // );
+          // alert("There are no images matching your request. Please try again.");
         } else {
           this.setState({
             items: hits,
@@ -42,8 +40,8 @@ export class App extends React.Component {
         }
       } catch (error) {
         this.setState({ status: "rejected" });
-        toast.error("Something went wrong, please try again later");
-        alert("Something went wrong, please try again later");
+        return toast.error("Something went wrong, please try again later");
+        // alert("Something went wrong, please try again later");
       }
     }
   };
@@ -59,6 +57,10 @@ export class App extends React.Component {
       }));
     } catch (error) {
       this.setState({ status: "rejected" });
+      return toast.warn(
+        "There are no images matching your request. Please try again."
+      );
+      
     }
   };
 
@@ -69,6 +71,7 @@ export class App extends React.Component {
         <div className={css.App}>
           <Searchbar onSubmit={this.handleFormSubmit} />
           <span>Enter a search term!!!</span>
+          <ToastContainer autoClose={2000} />
         </div>
       );
     }
@@ -79,6 +82,7 @@ export class App extends React.Component {
           <ImageGallery page={page} items={this.state.items} />
           <Loader />
           {totalHits > 12 && <Button onClick={this.onNextPage} />}
+          <ToastContainer autoClose={2000} />
         </div>
       );
     }
@@ -86,6 +90,7 @@ export class App extends React.Component {
       return (
         <div className={css.App}>
           <Searchbar onSubmit={this.handleFormSubmit} />
+          <ToastContainer autoClose={2000} />
         </div>
       );
     }
